@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"">
+    <link href="static/basic.css" rel="stylesheet">
+</head>
+
+<body>
+    <h3>
+         <a href = "{{ url_for('index') }}">Teams</a>
+    </h3>
+
+    <table>
+         <thead>
+            <tr>
+               <th>ID</th>
+               <th>Name</th>
+            </tr>
+         </thead>
+
+         <tbody>
+            {% for team in teams %}
+               <tr>
+                  <td>{{ team.team_id }}</td>
+                  <td>{{ team.team_name }}</td>
+               </tr>
+            {% endfor %}
+         </tbody>
+      </table>
+
+</body>
