@@ -1,0 +1,149 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>model &#8212; EPL Match Prediction  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for model</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">data</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">train_test_split</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
+<span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+
+<div class="viewcode-block" id="model"><a class="viewcode-back" href="../model.html#model.model">[docs]</a><span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This function fits a logistic regression on dataset provided by the user. It prints the model accuracy and creates a pickle file so that the model can be referenced later.</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># Specify fields that are numerical and categorical</span>
+	<span class="n">numerical</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+	<span class="n">categorical</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;buildUpPlaySpeedClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayDribblingClass_home&#39;</span><span class="p">,</span> 
+    	           <span class="s1">&#39;buildUpPlayPassingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayPositioningClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationPassingClass_home&#39;</span><span class="p">,</span>
+        	       <span class="s1">&#39;chanceCreationCrossingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationShootingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationPositioningClass_home&#39;</span><span class="p">,</span>
+            	   <span class="s1">&#39;defencePressureClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceAggressionClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceTeamWidthClass_home&#39;</span><span class="p">,</span>
+            	   <span class="s1">&#39;defenceDefenderLineClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;team_long_name_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlaySpeedClass_away&#39;</span><span class="p">,</span>
+            	   <span class="s1">&#39;buildUpPlayDribblingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayPassingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayPositioningClass_away&#39;</span><span class="p">,</span> 
+            	   <span class="s1">&#39;chanceCreationPassingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationCrossingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationShootingClass_away&#39;</span><span class="p">,</span> 
+            	   <span class="s1">&#39;chanceCreationPositioningClass_away&#39;</span><span class="p">,</span><span class="s1">&#39;defencePressureClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceAggressionClass_away&#39;</span><span class="p">,</span>
+            	   <span class="s1">&#39;defenceTeamWidthClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceDefenderLineClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;team_long_name_away&#39;</span><span class="p">]</span>
+
+	<span class="c1"># Convert data type as &#39;category&#39;</span>
+	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">categorical</span><span class="p">:</span>
+		<span class="n">df</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
+
+	<span class="c1"># Create dummy variables</span>
+	<span class="n">dummy</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">categorical</span><span class="p">)</span>
+
+	<span class="c1"># Split data into response and predictors</span>
+	<span class="n">y</span> <span class="o">=</span> <span class="n">dummy</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
+	<span class="n">x</span> <span class="o">=</span> <span class="n">dummy</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+	<span class="c1"># Create database of team attributes for future predictions</span>
+	<span class="n">team_stats</span> <span class="o">=</span> <span class="n">x</span><span class="p">[(</span><span class="n">x</span><span class="p">[</span><span class="s1">&#39;season_year&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">2015</span><span class="p">)]</span>
+	<span class="n">team_stats</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s1">&#39;team_stats.csv&#39;</span><span class="p">)</span>
+
+	<span class="c1"># Create training and test data tables</span>
+	<span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span> <span class="o">=</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span>
+
+	<span class="c1"># Fit logistic model on training data</span>
+	<span class="n">logreg_train</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+
+	<span class="c1"># Print out prediction accuracy for the data</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Model accuracy on training dataset: </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logreg_train</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+	<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Model accuracy on test dataset: </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logreg_train</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+
+	<span class="c1"># Fit logistic model on entire dataset</span>
+	<span class="n">logreg</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+	<span class="c1"># Create pickle file</span>
+	<span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">logreg</span><span class="p">)</span></div>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">manipulate</span><span class="p">())</span>
+
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Spencer Moon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

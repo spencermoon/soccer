@@ -9,7 +9,7 @@ warnings.filterwarnings("ignore")
 
 def model(df):
 	"""
-	This function fits a logistic regression on dataset provided by the user. It prints the model accuracy and creates a pickle file so that the model can be referenced later.
+	This function fits a logistic regression model on dataset provided by the user. It prints the model accuracy and creates a pickle file so that the model can be referenced later.
 	"""
 
 	# Specify fields that are numerical and categorical
@@ -42,18 +42,21 @@ def model(df):
 	# Create training and test data tables
 	x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = .3, random_state = 25)
 
-	# Fit logistic model on training data
+	# Fit logistic regression model on training data
 	logreg_train = LogisticRegression().fit(x_train, y_train)
 
 	# Print out prediction accuracy for the data
 	print('Model accuracy on training dataset: {:.2f}'.format(logreg_train.score(x_train, y_train)))
 	print('Model accuracy on test dataset: {:.2f}'.format(logreg_train.score(x_test, y_test)))
 
-	# Fit logistic model on entire dataset
+	# Fit logistic regression model on entire dataset
 	logreg = LogisticRegression().fit(x, y)
 
 	# Create pickle file
-	pickle.dumps(logreg)
+	model_name = 'model.pkl'
+	model_pkl = open(model_name, 'wb')
+	pickle.dump(logreg, model_pkl)
+	model_pkl.close()
 
 if __name__ == "__main__":
     model(data.manipulate())

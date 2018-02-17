@@ -45,8 +45,9 @@
   <h1>Source code for data</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
-<div class="viewcode-block" id="read"><a class="viewcode-back" href="../connection.html#data.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+<div class="viewcode-block" id="read"><a class="viewcode-back" href="../data.html#data.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	This function creates a DataFrame for tables that exist in a sqlite database.</span>
 
@@ -67,21 +68,24 @@
 	<span class="k">return</span> <span class="n">df</span></div>
 
 
-<div class="viewcode-block" id="manipulate"><a class="viewcode-back" href="../connection.html#data.manipulate">[docs]</a><span class="k">def</span> <span class="nf">manipulate</span><span class="p">(</span><span class="n">league_id</span> <span class="o">=</span> <span class="mi">1729</span><span class="p">):</span>
+<div class="viewcode-block" id="manipulate"><a class="viewcode-back" href="../data.html#data.manipulate">[docs]</a><span class="k">def</span> <span class="nf">manipulate</span><span class="p">(</span><span class="n">league_id</span> <span class="o">=</span> <span class="mi">1729</span><span class="p">):</span>
 	<span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">	This function creates a DataFrame for data to be used for model fitting. It conducts a number of joins and variable selection to get to the final set of predictors.</span>
 <span class="sd">	</span>
 <span class="sd">	Arg:</span>
-<span class="sd">		league_id (int): Defaults to EPL, but can be changed</span>
+<span class="sd">		league_id (int): Defaults to EPL league ID</span>
 
 <span class="sd">	Returns:</span>
 <span class="sd">		DataFrame: Final dataset to be used for model fitting </span>
 <span class="sd">	&quot;&quot;&quot;</span>
 
+	<span class="c1"># Define path for database</span>
+	<span class="n">db</span> <span class="o">=</span> <span class="s1">&#39;../../data/database.sqlite&#39;</span>
+
 	<span class="c1"># Load data tables</span>
-	<span class="n">match</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;match&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
-	<span class="n">team</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
-	<span class="n">team_attributes</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;team_attributes&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+	<span class="n">match</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;match&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+	<span class="n">team</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+	<span class="n">team_attributes</span> <span class="o">=</span> <span class="n">read</span><span class="p">(</span><span class="s1">&#39;team_attributes&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
 
 	<span class="c1"># Create a column to specify which team won the match; this will server as the response variable in the model</span>
 	<span class="n">epl_matches</span> <span class="o">=</span> <span class="n">match</span><span class="p">[(</span><span class="n">match</span><span class="p">[</span><span class="s1">&#39;league_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">league_id</span><span class="p">)]</span>

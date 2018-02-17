@@ -25,7 +25,7 @@ def read(name, db):
 
 def manipulate(league_id = 1729):
 	"""
-	This function creates a DataFrame for data to be used for model fitting. It conducts a number of joins and variable selection to get to the final set of predictors.
+	This function creates a DataFrame for data to be used for model fitting. It conducts a number of joins and variable selections to get to the final set of predictors.
 	
 	Arg:
 		league_id (int): Defaults to EPL league ID
