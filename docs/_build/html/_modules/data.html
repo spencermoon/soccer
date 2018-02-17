@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>data &#8212; EPL Match Prediction  documentation</title>
+    
+    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../',
+        VERSION:     '',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../_static/jquery.js"></script>
+    <script type="text/javascript" src="../_static/underscore.js"></script>
+    <script type="text/javascript" src="../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for data</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">sqlite3</span>
+
+<div class="viewcode-block" id="read"><a class="viewcode-back" href="../connection.html#data.read">[docs]</a><span class="k">def</span> <span class="nf">read</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">db</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This function creates a DataFrame for tables that exist in a sqlite database.</span>
+
+<span class="sd">	Args:</span>
+<span class="sd">		name (str): Name of the data table</span>
+<span class="sd">		db (str): Database path</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		DataFrame: Entire specified data table</span>
+<span class="sd">	&quot;&quot;&quot;</span>
+    
+    <span class="c1"># Make connection with the database</span>
+	<span class="n">conn</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db</span><span class="p">)</span>
+	<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_sql_query</span><span class="p">(</span><span class="s2">&quot;select * from &quot;</span> <span class="o">+</span> <span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;;&#39;</span><span class="p">,</span> <span class="n">conn</span><span class="p">)</span>
+    
+    <span class="c1"># Print loaded data table name and return DataFrame</span>
+	<span class="nb">print</span><span class="p">(</span><span class="n">name</span> <span class="o">+</span> <span class="s1">&#39;: loaded&#39;</span><span class="p">)</span>
+	<span class="k">return</span> <span class="n">df</span></div>
+
+
+<div class="viewcode-block" id="manipulate"><a class="viewcode-back" href="../connection.html#data.manipulate">[docs]</a><span class="k">def</span> <span class="nf">manipulate</span><span class="p">(</span><span class="n">league_id</span> <span class="o">=</span> <span class="mi">1729</span><span class="p">):</span>
+	<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">	This function creates a DataFrame for data to be used for model fitting. It conducts a number of joins and variable selection to get to the final set of predictors.</span>
+<span class="sd">	</span>
+<span class="sd">	Arg:</span>
+<span class="sd">		league_id (int): Defaults to EPL, but can be changed</span>
+
+<span class="sd">	Returns:</span>
+<span class="sd">		DataFrame: Final dataset to be used for model fitting </span>
+<span class="sd">	&quot;&quot;&quot;</span>
+
+	<span class="c1"># Load data tables</span>
+	<span class="n">match</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;match&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+	<span class="n">team</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;team&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+	<span class="n">team_attributes</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">read</span><span class="p">(</span><span class="s1">&#39;team_attributes&#39;</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+
+	<span class="c1"># Create a column to specify which team won the match; this will server as the response variable in the model</span>
+	<span class="n">epl_matches</span> <span class="o">=</span> <span class="n">match</span><span class="p">[(</span><span class="n">match</span><span class="p">[</span><span class="s1">&#39;league_id&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">league_id</span><span class="p">)]</span>
+	<span class="n">epl_matches</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">epl_matches</span><span class="p">[</span><span class="s1">&#39;home_team_goal&#39;</span><span class="p">]</span> <span class="o">&gt;</span> <span class="n">epl_matches</span><span class="p">[</span><span class="s1">&#39;away_team_goal&#39;</span><span class="p">],</span> <span class="s1">&#39;home&#39;</span> <span class="p">,</span> 
+                        	<span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">epl_matches</span><span class="p">[</span><span class="s1">&#39;home_team_goal&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="n">epl_matches</span><span class="p">[</span><span class="s1">&#39;away_team_goal&#39;</span><span class="p">],</span> <span class="s1">&#39;draw&#39;</span> <span class="p">,</span> <span class="s1">&#39;away&#39;</span><span class="p">))</span>
+
+	<span class="c1"># Create a field for season year</span>
+	<span class="n">epl_matches</span><span class="p">[</span><span class="s1">&#39;season_year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_numeric</span><span class="p">(</span><span class="n">epl_matches</span><span class="p">[</span><span class="s1">&#39;season&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="p">[:</span><span class="mi">4</span><span class="p">])</span>
+
+	<span class="c1"># Leave out unnecessary attributes</span>
+	<span class="n">epl_matches</span> <span class="o">=</span> <span class="n">epl_matches</span><span class="p">[[</span><span class="s1">&#39;match_api_id&#39;</span><span class="p">,</span> <span class="s1">&#39;league_id&#39;</span><span class="p">,</span> <span class="s1">&#39;season_year&#39;</span><span class="p">,</span> <span class="s1">&#39;home_team_api_id&#39;</span><span class="p">,</span> <span class="s1">&#39;away_team_api_id&#39;</span><span class="p">,</span> <span class="s1">&#39;result&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span>
+
+	<span class="c1"># Create an mapping of EPL teams </span>
+	<span class="n">epl_mapping</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">epl_matches</span><span class="p">[</span><span class="s1">&#39;home_team_api_id&#39;</span><span class="p">],</span> <span class="n">epl_matches</span><span class="p">[</span><span class="s1">&#39;away_team_api_id&#39;</span><span class="p">]],</span> <span class="n">ignore_index</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">unique</span><span class="p">())</span>
+	<span class="n">epl_mapping</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;team_api_id&#39;</span><span class="p">]</span>
+
+	<span class="c1"># Filter out data to only include EPL teams</span>
+	<span class="n">epl_teams</span> <span class="o">=</span> <span class="n">team_attributes</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">epl_mapping</span><span class="p">,</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;team_api_id&#39;</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s1">&#39;inner&#39;</span><span class="p">)</span>
+
+	<span class="c1"># Create a column for year</span>
+	<span class="n">epl_teams</span><span class="p">[</span><span class="s1">&#39;year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DatetimeIndex</span><span class="p">(</span><span class="n">epl_teams</span><span class="p">[</span><span class="s1">&#39;date&#39;</span><span class="p">])</span><span class="o">.</span><span class="n">year</span>
+
+	<span class="c1"># Add team name and drop other  unnecessary fields</span>
+	<span class="n">epl_teams</span> <span class="o">=</span> <span class="n">epl_teams</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">team</span><span class="p">[[</span><span class="s1">&#39;team_api_id&#39;</span><span class="p">,</span> <span class="s1">&#39;team_long_name&#39;</span><span class="p">]],</span> <span class="n">on</span> <span class="o">=</span> <span class="s1">&#39;team_api_id&#39;</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s1">&#39;left&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;id&#39;</span><span class="p">,</span> <span class="s1">&#39;team_fifa_api_id&#39;</span><span class="p">,</span> <span class="s1">&#39;date&#39;</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+	<span class="c1"># Add home team attributes</span>
+	<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">epl_matches</span><span class="p">,</span> <span class="n">epl_teams</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s1">&#39;inner&#39;</span><span class="p">,</span> <span class="n">left_on</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;home_team_api_id&#39;</span><span class="p">,</span> <span class="s1">&#39;season_year&#39;</span><span class="p">],</span> <span class="n">right_on</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;team_api_id&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">])</span>
+	<span class="n">data</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">epl_teams</span><span class="p">,</span> <span class="n">how</span> <span class="o">=</span> <span class="s1">&#39;inner&#39;</span><span class="p">,</span> <span class="n">left_on</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;away_team_api_id&#39;</span><span class="p">,</span> <span class="s1">&#39;season_year&#39;</span><span class="p">],</span> <span class="n">right_on</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;team_api_id&#39;</span><span class="p">,</span> <span class="s1">&#39;year&#39;</span><span class="p">],</span> <span class="n">suffixes</span> <span class="o">=</span> <span class="p">(</span><span class="s1">&#39;_home&#39;</span><span class="p">,</span> <span class="s1">&#39;_away&#39;</span><span class="p">))</span> \
+         	 <span class="o">.</span><span class="n">drop</span><span class="p">([</span><span class="s1">&#39;league_id&#39;</span><span class="p">,</span> <span class="s1">&#39;year_home&#39;</span><span class="p">,</span> <span class="s1">&#39;year_away&#39;</span><span class="p">,</span> <span class="s1">&#39;match_api_id&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayDribbling_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayDribbling_away&#39;</span><span class="p">,</span> <span class="s1">&#39;home_team_api_id&#39;</span><span class="p">,</span> <span class="s1">&#39;away_team_api_id&#39;</span><span class="p">,</span> <span class="s1">&#39;team_api_id_home&#39;</span><span class="p">,</span> <span class="s1">&#39;team_api_id_away&#39;</span><span class="p">],</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+
+    <span class="c1"># Return DataFrame</span>
+	<span class="k">return</span> <span class="n">data</span></div>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+  <li><a href="index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2018, Spencer Moon.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.6</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
