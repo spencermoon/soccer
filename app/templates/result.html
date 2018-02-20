@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"">
+    <link href="static/basic.css" rel="stylesheet">
+</head>
+
+<button class="button" onclick="window.location.href='{{ url_for( 'index' ) }}';">
+        Make more predictions!
+</button>  
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+
+<div id="container" style="min-width: 310px; max-width: 500px; height: 400px; margin: 0 auto"> </div>
+
+<script>
+var a = {{ result[0] }}
+var d = {{ result[1] }}
+var h = {{ result[2] }}
+var home_team = {{ home|tojson }}
+var away_team = {{ away|tojson }}
+
+Highcharts.chart('container', {
+    chart: {
+        type: 'bar'
+    },
+    title: {
+    text: null
+    },
+    colors: [
+    '#2C3531', 
+    '#116466', 
+    '#747474'
+    ],
+    xAxis: {
+        categories: [home_team, away_team, 'Draw'],
+        title: {
+            text: null
+        },
+    },
+    yAxis: {
+        min: 0,
+        lineWidth: 0,
+        minorGridLineWidth: 0,
+        lineColor: 'transparent',
+        gridLineColor: 'transparent',
+        title: {
+            text: null,
+            align: 'high'
+        },
+        labels: {
+            enabled: false
+        }
+    },
+    tooltip: {
+        valueSuffix: '%',
+        shape: 'square',
+        shadow: false
+    },
+    plotOptions: {
+        bar: {
+            colorByPoint: true,    
+                dataLabels: {
+                enabled: false
+            }
+        }
+    },
+    legend: {
+        enabled: false
+
+    },
+    credits: {
+        enabled: false
+    },
+    series: [{
+        name: 'Win Probability',
+        data: [Math.round(h*100), Math.round(a*100), Math.round(d*100)]
+    }]
+});
+</script>
+

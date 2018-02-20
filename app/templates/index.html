@@ -1,31 +1,78 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8"">
+	<meta charset="UTF-8"">
     <link href="static/basic.css" rel="stylesheet">
 </head>
 
 <body>
-    <h3>
-         <a href = "{{ url_for('index') }}">Teams</a>
-    </h3>
+    <h1>
+     	<a>Select teams&#58;</a>
+    </h1>
 
-    <table>
-         <thead>
-            <tr>
-               <th>ID</th>
-               <th>Name</th>
-            </tr>
-         </thead>
 
-         <tbody>
-            {% for team in teams %}
-               <tr>
-                  <td>{{ team.team_id }}</td>
-                  <td>{{ team.team_name }}</td>
-               </tr>
-            {% endfor %}
-         </tbody>
-      </table>
 
+    <form action='{{ url_for( 'result' ) }}' method="post">
+		<h3>
+	    <a>Home</a>
+	    </h3>
+
+	
+	    <select name="hometeam" id="home" class="form-control">
+	    	<optgroup label="Teams">
+	    	<option>
+	    	</option>
+	    	{% for team in teams %}
+	        <option>
+	        	{{ team.team_name }}
+	        </option>
+	      	{% endfor %}
+	      	</optgroup>
+	    </select>
+		
+
+	    <h3>
+	      <a>Away</a>
+	    </h3>
+
+	    
+	    <select name="awayteam" id="away" class="form-control">
+	    	<optgroup label="Teams">
+	    	<option>
+	    	</option>
+	    	{% for team in teams %}
+	        <option>
+	        	{{ team.team_name }}
+	        </option>
+	    	{% endfor %}
+	    	</optgroup>
+	    </select>
+		
+
+	<br>
+	<br>
+	<br>
+
+		<button type="submit" value="notsubmitted" name = "mainbutton" id="button">
+			Get match prediction!
+			<script>
+			document.getElementById('button').onclick = function() 
+			{
+			    if (document.getElementById('home').value == "" || document.getElementById('away').value == "") 
+			    {
+			        window.alert("Please select home and away teams.");
+			    } 
+			    else if (document.getElementById('home').value == document.getElementById('away').value)
+			    {
+			    	window.alert("Please select two different teams"); 
+			    }
+			    else
+			    {
+			    	document.getElementById('button').value = "submitted"
+			    	window.location.href='{{ url_for( 'result' ) }}';
+			    }
+			}
+			</script>
+		</button>
+	</form>
 </body>

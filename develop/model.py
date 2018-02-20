@@ -10,6 +10,9 @@ warnings.filterwarnings("ignore")
 def model(df):
 	"""
 	This function fits a logistic regression model on dataset provided by the user. It prints the model accuracy and creates a pickle file so that the model can be referenced later.
+	
+	Arg:
+		df (DataFrame): data to be used for fitting the model
 	"""
 
 	# Specify fields that are numerical and categorical
@@ -33,11 +36,7 @@ def model(df):
 
 	# Split data into response and predictors
 	y = dummy['result']
-	x = dummy.drop('result', axis=1)
-
-	# Create database of team attributes for future predictions
-	team_stats = x[(x['season_year'] == 2015)]
-	team_stats.to_csv('team_stats.csv')
+	x = dummy.drop('result', axis = 1)
 
 	# Create training and test data tables
 	x_train, x_test, y_train, y_test = train_test_split(x, y, test_size = .3, random_state = 25)
