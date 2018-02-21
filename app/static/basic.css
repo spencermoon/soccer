@@ -8,3 +8,7 @@ body {
   background-color: white;
 }
 
+.unstyled-button {
+  border: none;
+}
+

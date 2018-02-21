@@ -1,26 +1,55 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-	<meta charset="UTF-8"">
-    <link href="static/basic.css" rel="stylesheet">
-</head>
+
+<meta charset="UTF-8"">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+
+<style>
+body,h1 {font-family: "Raleway", sans-serif}
+body, html {height: 100%}
+.bgimg {
+    background-image: url('../static/image.jpg');
+    min-height: 100%;
+    background-position: center;
+    background-size: cover;
+}
+.unstyled {
+	width:70%;
+	border: none;
+	background-color: rgba(255,255,255,.6)
+}
+.roundbutton {
+    padding: 8px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    margin: 2px 2px;
+    border-radius: 50%;
+    color:inherit;
+    background-color:inherit;
+}
+.opacity{animation:opac 1.0s} opac{from{opacity:0} to{opacity:1}}
+</style>
 
 <body>
-    <h1>
-     	<a>Select teams&#58;</a>
-    </h1>
 
+	<div class="bgimg w3-display-container w3-text-white">
+  		<div class="w3-display-middle">
+    	<h1 class="w3-xlarge">
+    	<center>EPL MATCH PREDICTION</center>
+    	</h1>
+    	<hr class="w3-border-grey" style="margin:auto;width:95%">
+    	<p class="w3-large w3-center">SELECT TEAMS</p>
+<div>
+<form action='{{ url_for( 'result' ) }}' method="post" class="w3-small w3-center">
 
-
-    <form action='{{ url_for( 'result' ) }}' method="post">
-		<h3>
-	    <a>Home</a>
-	    </h3>
-
-	
-	    <select name="hometeam" id="home" class="form-control">
+	    <select name="hometeam" id="home" class="form-control unstyled">
 	    	<optgroup label="Teams">
 	    	<option>
+	    		HOME
 	    	</option>
 	    	{% for team in teams %}
 	        <option>
@@ -29,16 +58,14 @@
 	      	{% endfor %}
 	      	</optgroup>
 	    </select>
-		
 
-	    <h3>
-	      <a>Away</a>
-	    </h3>
+	    <br>
+	    <h6></h6>
 
-	    
-	    <select name="awayteam" id="away" class="form-control">
-	    	<optgroup label="Teams">
+	    <select name="awayteam" id="away" class="form-control unstyled">
+	    	<optgroup label="Teams" style="font-size: 14px !important;">
 	    	<option>
+	    		AWAY
 	    	</option>
 	    	{% for team in teams %}
 	        <option>
@@ -47,24 +74,22 @@
 	    	{% endfor %}
 	    	</optgroup>
 	    </select>
-		
 
-	<br>
-	<br>
-	<br>
+	    <br>
+	    <br>
 
-		<button type="submit" value="notsubmitted" name = "mainbutton" id="button">
-			Get match prediction!
+	    <button type="submit" value="notsubmitted" name = "mainbutton" id="button" class="w3-btn roundbutton">
+			GO
 			<script>
 			document.getElementById('button').onclick = function() 
 			{
-			    if (document.getElementById('home').value == "" || document.getElementById('away').value == "") 
+			    if (document.getElementById('home').value == "HOME" || document.getElementById('away').value == "AWAY") 
 			    {
 			        window.alert("Please select home and away teams.");
 			    } 
 			    else if (document.getElementById('home').value == document.getElementById('away').value)
 			    {
-			    	window.alert("Please select two different teams"); 
+			    	window.alert("Please select two different teams."); 
 			    }
 			    else
 			    {
@@ -74,5 +99,13 @@
 			}
 			</script>
 		</button>
+
 	</form>
+	<br>
+
+</div>
+  	</div>
+	</div>
+
 </body>
+</html>

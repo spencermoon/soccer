@@ -1,5 +1,5 @@
 from flask import render_template, request, redirect, url_for, flash
-from app import app, db, db_path, engine
+from app import app, db#, db_path, engine
 from app.data_model import team, stat
 from develop.prediction import prediction
 import pandas as pd
