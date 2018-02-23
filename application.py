@@ -1,9 +1,11 @@
 from flask import render_template, request, redirect, url_for, flash
-from app import app, db#, db_path, engine
+from app import app, db, engine
+from config import SQLALCHEMY_DATABASE_URI
 from app.data_model import team, stat
 from develop.prediction import prediction
 import pandas as pd
 import sqlite3
+from sqlalchemy.orm import sessionmaker
 
 @app.route('/')
 def index():
@@ -17,17 +19,12 @@ def result():
 	if request.method == 'POST' and request.form['mainbutton'] == 'submitted':
 		home = request.form.get('hometeam')
 		away = request.form.get('awayteam')
-		#stats = pd.read_sql(stat.query.all(), db)
-		#stats.to_csv('test.csv')
-		columns = stat.__table__.columns.keys()
-
+		
+		stats = stat.query.all()
 		conn = sqlite3.connect("../data/data.sqlite")
 		stats = pd.read_sql_query("select * from stats;", conn)
-		
-
 
 		result = prediction(home, away, stats)
-
 		return render_template('result.html', result = result, home = home, away = away)
 	
 	else:
