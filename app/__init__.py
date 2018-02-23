@@ -9,7 +9,5 @@ app = Flask(__name__)
 app.config.from_object('config')
 engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI)
 
-#engine = create_engine('sqlite:///' + db_path)
-
 # Initialize the database
 db = SQLAlchemy(app)
