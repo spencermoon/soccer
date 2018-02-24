@@ -1,8 +1,14 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400,700,600);
+@import url(https://fonts.googleapis.com/css?family=Raleway:100);
 
 body {
   height: 100%;
   -webkit-font-smoothing: antialiased;
-  font-family: Arial, sans-serif;
-  background-color:#cdced8;
+  font-family: 'Raleway', sans-serif;
+  font-weight:100;
+  background-color: white;
 }
+
+.unstyled-button {
+  border: none;
+}
+

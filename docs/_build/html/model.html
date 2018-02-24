@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Search &#8212; EPL Match Prediction  documentation</title>
+    <title>Model Fitting &#8212; EPL Match Prediction  documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -25,21 +25,15 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-    <script type="text/javascript" src="_static/searchtools.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
-    <link rel="search" title="Search" href="#" />
-  <script type="text/javascript">
-    jQuery(function() { Search.loadIndex("searchindex.js"); });
-  </script>
-  
-  <script type="text/javascript" id="searchindexloader"></script>
-  
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Prediction" href="predict.html" />
+    <link rel="prev" title="Data Cleansing &amp; Manipulation" href="data.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
   
   
   <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
-
 
   </head>
   <body role="document">
@@ -50,29 +44,21 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <h1 id="search-documentation">Search</h1>
-  <div id="fallback" class="admonition warning">
-  <script type="text/javascript">$('#fallback').hide();</script>
-  <p>
-    Please activate JavaScript to enable the search
-    functionality.
-  </p>
-  </div>
-  <p>
-    From here you can search these documents. Enter your search
-    words into the box below and click "search". Note that the search
-    function will automatically search for all of the words. Pages
-    containing fewer words won't appear in the result list.
-  </p>
-  <form action="" method="get">
-    <input type="text" name="q" value="" />
-    <input type="submit" value="search" />
-    <span id="search-progress" style="padding-left: 10px"></span>
-  </form>
-  
-  <div id="search-results">
-  
-  </div>
+  <div class="section" id="model-fitting">
+<h1>Model Fitting<a class="headerlink" href="#model-fitting" title="Permalink to this headline">¶</a></h1>
+<p>The function below fits a logistic regression model to the data.</p>
+<span class="target" id="module-model"></span><dl class="function">
+<dt id="model.model">
+<code class="descclassname">model.</code><code class="descname">model</code><span class="sig-paren">(</span><em>df</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model.html#model"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#model.model" title="Permalink to this definition">¶</a></dt>
+<dd><p>This function fits a logistic regression model on dataset provided by the user. It prints the model accuracy and creates a pickle file so that the model can be referenced later.</p>
+<dl class="docutils">
+<dt>Arg:</dt>
+<dd>df (DataFrame): data to be used for fitting the model</dd>
+</dl>
+</dd></dl>
+
+</div>
+
 
           </div>
         </div>
@@ -82,9 +68,21 @@
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="data.html" title="previous chapter">Data Cleansing &amp; Manipulation</a></li>
+      <li>Next: <a href="predict.html" title="next chapter">Prediction</a></li>
   </ul></li>
 </ul>
 </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
         </div>
       </div>
       <div class="clearer"></div>
@@ -96,6 +94,9 @@
       Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.6</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
+      |
+      <a href="_sources/model.rst.txt"
+          rel="nofollow">Page source</a>
     </div>
 
     

@@ -1,12 +1,13 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from config import SQLALCHEMY_DATABASE_URI
+import sqlalchemy
 
 app = Flask(__name__)
-db_path = '../../data/database.sqlite'
 
 # SQLAlchemy configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///' + db_path
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+app.config.from_object('config')
+engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI)
 
 # Initialize the database
 db = SQLAlchemy(app)

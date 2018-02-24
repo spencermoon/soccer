@@ -10,7 +10,9 @@ Welcome to EPL Match Prediction's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-
+   data
+   model
+   predict
 
 Indices and tables
 ==================
