@@ -1,6 +1,7 @@
 import pandas as pd
 import sqlite3
 import numpy as np
+from config import DB_PATH
 
 def read(name, db):
 	"""
@@ -35,7 +36,7 @@ def manipulate(league_id = 1729):
 	"""
 
 	# Define path for database
-	db = '../../data/database.sqlite'
+	db = DB_PATH
 
 	# Load data tables
 	match = read('match', db)

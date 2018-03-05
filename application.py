@@ -20,8 +20,8 @@ def result():
 		home = request.form.get('hometeam')
 		away = request.form.get('awayteam')
 		
-		stats = stat.query.all()
-		conn = sqlite3.connect("../data/data.sqlite")
+		#stats = stat.query.all()
+		conn = sqlite3.connect("develop/data/prediction.sqlite")
 		stats = pd.read_sql_query("select * from stats;", conn)
 
 		result = prediction(home, away, stats)
