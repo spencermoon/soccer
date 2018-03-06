@@ -1,4 +1,5 @@
 from app import db
+import app.data_model
 
 def create_db():
     db.create_all()
