@@ -1,3 +1,4 @@
+
 # Local database
 #SQLALCHEMY_DATABASE_URI = 'sqlite:///../../data/data.sqlite'
 #LOCAL_PATH = '../data/data.sqlite'
