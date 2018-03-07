@@ -1,18 +1,17 @@
 from flask import render_template, request, redirect, url_for, flash
-from app import app, db, engine
+from app import application, db, engine
 from app.data_model import team
 from develop.prediction import prediction
 import pandas as pd
 
 
-
-@app.route('/')
+@application.route('/')
 def index():
 
 	return render_template('index.html', teams = team.query.all())
 
 
-@app.route('/result', methods = ['POST'])
+@application.route('/result', methods = ['POST'])
 def result():
 
 	if request.method == 'POST' and request.form['mainbutton'] == 'submitted':
@@ -28,4 +27,4 @@ def result():
 		return redirect(url_for('index'))
 
 if __name__ == "__main__":
-	app.run(host = '0.0.0.0')
+	application.run(host = '0.0.0.0', debug = True)
