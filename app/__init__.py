@@ -10,4 +10,4 @@ application.config.from_object('config')
 engine = sqlalchemy.create_engine(SQLALCHEMY_DATABASE_URI)
 
 # Initialize the database
-db = SQLAlchemy(app)
+db = SQLAlchemy(application)
