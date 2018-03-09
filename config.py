@@ -9,4 +9,4 @@ SQLALCHEMY_DATABASE_URI = 'mysql+pymysql://spencer:msia_423@db.c70edrasw7bt.us-w
 
 
 SQLALCHEMY_TRACK_MODIFICATIONS = False
-SECRET_KEY = 'sbQm38a1awYXbmfWLgZaHCupa8egevTiZusvHx/G'
+#SECRET_KEY = 'sbQm38a1awYXbmfWLgZaHCupa8egevTiZusvHx/G'
