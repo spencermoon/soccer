@@ -1,6 +1,8 @@
 import pandas as pd
 import sqlite3
 import numpy as np
+import sys
+sys.path.append("..")
 from config import DB_PATH
 
 def read(name, db):
