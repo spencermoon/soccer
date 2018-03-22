@@ -43,7 +43,7 @@
           <div class="body" role="main">
             
   <h1>Source code for model</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">data</span> 
+<span></span><span class="kn">import</span> <span class="nn">data</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">LogisticRegression</span>
@@ -51,61 +51,82 @@
 <span class="kn">import</span> <span class="nn">pickle</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="s2">&quot;ignore&quot;</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">logging</span>
+
 
 <div class="viewcode-block" id="model"><a class="viewcode-back" href="../model.html#model.model">[docs]</a><span class="k">def</span> <span class="nf">model</span><span class="p">(</span><span class="n">df</span><span class="p">):</span>
-	<span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">	This function fits a logistic regression model on dataset provided by the user. It prints the model accuracy and creates a pickle file so that the model can be referenced later.</span>
-<span class="sd">	</span>
-<span class="sd">	Arg:</span>
-<span class="sd">		df (DataFrame): data to be used for fitting the model</span>
-<span class="sd">	&quot;&quot;&quot;</span>
+    <span class="sd">&quot;&quot;&quot;Create a model and save as a pickle file.</span>
 
-	<span class="c1"># Specify fields that are numerical and categorical</span>
-	<span class="n">numerical</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
-	<span class="n">categorical</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;buildUpPlaySpeedClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayDribblingClass_home&#39;</span><span class="p">,</span> 
-    	           <span class="s1">&#39;buildUpPlayPassingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayPositioningClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationPassingClass_home&#39;</span><span class="p">,</span>
-        	       <span class="s1">&#39;chanceCreationCrossingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationShootingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationPositioningClass_home&#39;</span><span class="p">,</span>
-            	   <span class="s1">&#39;defencePressureClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceAggressionClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceTeamWidthClass_home&#39;</span><span class="p">,</span>
-            	   <span class="s1">&#39;defenceDefenderLineClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;team_long_name_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlaySpeedClass_away&#39;</span><span class="p">,</span>
-            	   <span class="s1">&#39;buildUpPlayDribblingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayPassingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayPositioningClass_away&#39;</span><span class="p">,</span> 
-            	   <span class="s1">&#39;chanceCreationPassingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationCrossingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationShootingClass_away&#39;</span><span class="p">,</span> 
-            	   <span class="s1">&#39;chanceCreationPositioningClass_away&#39;</span><span class="p">,</span><span class="s1">&#39;defencePressureClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceAggressionClass_away&#39;</span><span class="p">,</span>
-            	   <span class="s1">&#39;defenceTeamWidthClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceDefenderLineClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;team_long_name_away&#39;</span><span class="p">]</span>
+<span class="sd">    This function fits a logistic regression model on dataset provided by the </span>
+<span class="sd">    user. It prints the model accuracy and creates a pickle file so that the </span>
+<span class="sd">    model can be referenced later.</span>
 
-	<span class="c1"># Convert data type as &#39;category&#39;</span>
-	<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">categorical</span><span class="p">:</span>
-		<span class="n">df</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        df (DataFrame): data to be used for fitting the model.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 
-	<span class="c1"># Create dummy variables</span>
-	<span class="n">dummy</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">categorical</span><span class="p">)</span>
+    <span class="c1"># Specify fields that are numerical and categorical.</span>
+    <span class="n">numerical</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">describe</span><span class="p">())</span>
+    <span class="n">categorical</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;buildUpPlaySpeedClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayDribblingClass_home&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;buildUpPlayPassingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayPositioningClass_home&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;chanceCreationPassingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationCrossingClass_home&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;chanceCreationShootingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationPositioningClass_home&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;defencePressureClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceAggressionClass_home&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;defenceTeamWidthClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceDefenderLineClass_home&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;team_long_name_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlaySpeedClass_away&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;buildUpPlayDribblingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayPassingClass_away&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;buildUpPlayPositioningClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationPassingClass_away&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;chanceCreationCrossingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationShootingClass_away&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;chanceCreationPositioningClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;defencePressureClass_away&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;defenceAggressionClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceTeamWidthClass_away&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;defenceDefenderLineClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;team_long_name_away&#39;</span><span class="p">]</span>
 
-	<span class="c1"># Split data into response and predictors</span>
-	<span class="n">y</span> <span class="o">=</span> <span class="n">dummy</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
-	<span class="n">x</span> <span class="o">=</span> <span class="n">dummy</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="n">axis</span> <span class="o">=</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="c1"># Convert data type as category.</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">categorical</span><span class="p">:</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;category&#39;</span><span class="p">)</span>
 
-	<span class="c1"># Create training and test data tables</span>
-	<span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span> <span class="o">=</span> <span class="o">.</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span> <span class="o">=</span> <span class="mi">25</span><span class="p">)</span>
+    <span class="c1"># Create dummy variables.</span>
+    <span class="n">dummy</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">categorical</span><span class="p">)</span>
 
-	<span class="c1"># Fit logistic regression model on training data</span>
-	<span class="n">logreg_train</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="c1"># Split data into response and predictors.</span>
+    <span class="n">y</span> <span class="o">=</span> <span class="n">dummy</span><span class="p">[</span><span class="s1">&#39;result&#39;</span><span class="p">]</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">dummy</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;result&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
 
-	<span class="c1"># Print out prediction accuracy for the data</span>
-	<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Model accuracy on training dataset: </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logreg_train</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
-	<span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Model accuracy on test dataset: </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">logreg_train</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+    <span class="c1"># Create training and test data tables.</span>
+    <span class="n">x_train</span><span class="p">,</span> <span class="n">x_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=.</span><span class="mi">3</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">25</span><span class="p">)</span>
 
-	<span class="c1"># Fit logistic regression model on entire dataset</span>
-	<span class="n">logreg</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+    <span class="c1"># Fit logistic regression model on training data.</span>
+    <span class="n">logreg_train</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
 
-	<span class="c1"># Create pickle file</span>
-	<span class="n">model_name</span> <span class="o">=</span> <span class="s1">&#39;model.pkl&#39;</span>
-	<span class="n">model_pkl</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
-	<span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">logreg</span><span class="p">,</span> <span class="n">model_pkl</span><span class="p">)</span>
-	<span class="n">model_pkl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
+    <span class="c1"># Print out prediction accuracy for the data.</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Model accuracy on training dataset: </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">logreg_train</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)))</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Model accuracy on test dataset: </span><span class="si">{:.2f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+        <span class="n">logreg_train</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)))</span>
+
+    <span class="c1"># Fit logistic regression model on entire dataset.</span>
+    <span class="n">logreg</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+
+    <span class="c1"># Create pickle file</span>
+    <span class="n">model_name</span> <span class="o">=</span> <span class="s1">&#39;model.pkl&#39;</span>
+    <span class="n">model_pkl</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span>
+    <span class="n">pickle</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">logreg</span><span class="p">,</span> <span class="n">model_pkl</span><span class="p">)</span>
+    <span class="n">model_pkl</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">model</span><span class="p">(</span><span class="n">data</span><span class="o">.</span><span class="n">manipulate</span><span class="p">())</span>
+    <span class="n">logging</span><span class="o">.</span><span class="n">basicConfig</span><span class="p">(</span><span class="n">level</span><span class="o">=</span><span class="n">logging</span><span class="o">.</span><span class="n">INFO</span><span class="p">)</span>
+    <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+    <span class="n">hdlr</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">FileHandler</span><span class="p">(</span><span class="s1">&#39;./log.log&#39;</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">addHandler</span><span class="p">(</span><span class="n">hdlr</span><span class="p">)</span> 
 
-
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Creating data table for model fitting...&#39;</span><span class="p">)</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">manipulate</span><span class="p">()</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Data table created.&#39;</span><span class="p">)</span>
+    
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Producing logistic regression model...&#39;</span><span class="p">)</span>
+    <span class="n">model</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s1">&#39;Model created.&#39;</span><span class="p">)</span>
 </pre></div>
 
           </div>

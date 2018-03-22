@@ -50,25 +50,28 @@
 <span class="target" id="module-data"></span><dl class="function">
 <dt id="data.manipulate">
 <code class="descclassname">data.</code><code class="descname">manipulate</code><span class="sig-paren">(</span><em>league_id=1729</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data.html#manipulate"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.manipulate" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function creates a DataFrame for data to be used for model fitting. It conducts a number of joins and variable selections to get to the final set of predictors.</p>
+<dd><p>Create data table for model fitting.</p>
+<p>This function creates a DataFrame for data to be used for model fitting. It 
+conducts a number of joins and variable selections to create the final set 
+of predictors.</p>
 <dl class="docutils">
-<dt>Arg:</dt>
-<dd>league_id (int): Defaults to EPL league ID</dd>
+<dt>Args:</dt>
+<dd>league_id (int): Defaults to EPL league ID.</dd>
 <dt>Returns:</dt>
-<dd>DataFrame: Final dataset to be used for model fitting</dd>
+<dd>DataFrame: Final dataset to be used for model fitting.</dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
 <dt id="data.read">
 <code class="descclassname">data.</code><code class="descname">read</code><span class="sig-paren">(</span><em>name</em>, <em>db</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/data.html#read"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#data.read" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function creates a DataFrame for tables that exist in a sqlite database.</p>
+<dd><p>Create a DataFrame for tables that exist in a sqlite database.</p>
 <dl class="docutils">
 <dt>Args:</dt>
-<dd>name (str): Name of the data table
-db (str): Database path</dd>
+<dd>name (str): Name of the data table.
+db (str): Database path.</dd>
 <dt>Returns:</dt>
-<dd>DataFrame: Entire specified data table</dd>
+<dd>DataFrame: Entire specified data table.</dd>
 </dl>
 </dd></dl>
 

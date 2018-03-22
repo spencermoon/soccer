@@ -1,9 +1,8 @@
 from app import db
 
-# Define data tables
 
 class team(db.Model):
-
+	"""Define columns for teams."""
 	__tablename__ = 'teams'
 
 	team_id = db.Column('team_api_id', db.Integer, primary_key = True)
@@ -11,7 +10,7 @@ class team(db.Model):
 
 
 class stat(db.Model):
-
+	"""Define columns for stats."""
 	__tablename__ = 'stats'
 
 	season_year = db.Column('season_year', db.Integer, primary_key = True)

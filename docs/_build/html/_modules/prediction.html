@@ -49,45 +49,50 @@
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 
 
-<div class="viewcode-block" id="prediction"><a class="viewcode-back" href="../predict.html#prediction.prediction">[docs]</a><span class="k">def</span> <span class="nf">prediction</span><span class="p">(</span><span class="n">home</span><span class="p">,</span> <span class="n">away</span><span class="p">,</span> <span class="n">stats</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    This function returns win probabilities based on user inputs for home and away teams combined with team attributes and playing styles.</span>
+<div class="viewcode-block" id="prediction"><a class="viewcode-back" href="../predict.html#prediction.prediction">[docs]</a><span class="k">def</span> <span class="nf">prediction</span><span class="p">(</span><span class="n">home</span><span class="p">,</span> <span class="n">away</span><span class="p">,</span> <span class="n">stats</span><span class="p">,</span> <span class="n">model</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Make predictions using a static model.</span>
+
+<span class="sd">    This function returns win probabilities based on user inputs for home and </span>
+<span class="sd">    away teams combined with team attributes and playing styles.</span>
 
 <span class="sd">    Args:</span>
-<span class="sd">        home (str): Home team name</span>
-<span class="sd">        away (str): Away team name</span>
-<span class="sd">        stats (df): DataFrame that contains team attributes and playing styles</span>
+<span class="sd">        home (str): Home team name.</span>
+<span class="sd">        away (str): Away team name.</span>
+<span class="sd">        stats (df): DataFrame that contains team attributes and playing styles.</span>
+<span class="sd">        model (pkl): Static model.</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        list: List of win probabilities for away, draw, and home</span>
+<span class="sd">        list: List of win probabilities for away, draw, and home.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="c1"># Define categorical variables and initiate year variable</span>
-    <span class="n">categorical</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;buildUpPlaySpeedClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayDribblingClass_home&#39;</span><span class="p">,</span> 
-    	           <span class="s1">&#39;buildUpPlayPassingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayPositioningClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationPassingClass_home&#39;</span><span class="p">,</span>
-        	       <span class="s1">&#39;chanceCreationCrossingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationShootingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationPositioningClass_home&#39;</span><span class="p">,</span>
-            	   <span class="s1">&#39;defencePressureClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceAggressionClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceTeamWidthClass_home&#39;</span><span class="p">,</span>
-            	   <span class="s1">&#39;defenceDefenderLineClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;team_long_name_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlaySpeedClass_away&#39;</span><span class="p">,</span>
-            	   <span class="s1">&#39;buildUpPlayDribblingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayPassingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayPositioningClass_away&#39;</span><span class="p">,</span> 
-            	   <span class="s1">&#39;chanceCreationPassingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationCrossingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationShootingClass_away&#39;</span><span class="p">,</span> 
-            	   <span class="s1">&#39;chanceCreationPositioningClass_away&#39;</span><span class="p">,</span><span class="s1">&#39;defencePressureClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceAggressionClass_away&#39;</span><span class="p">,</span>
-            	   <span class="s1">&#39;defenceTeamWidthClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceDefenderLineClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;team_long_name_away&#39;</span><span class="p">]</span>
+    <span class="c1"># Define categorical variables and initiate year variable.</span>
+    <span class="n">categorical</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;buildUpPlaySpeedClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayDribblingClass_home&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;buildUpPlayPassingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayPositioningClass_home&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;chanceCreationPassingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationCrossingClass_home&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;chanceCreationShootingClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationPositioningClass_home&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;defencePressureClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceAggressionClass_home&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;defenceTeamWidthClass_home&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceDefenderLineClass_home&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;team_long_name_home&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlaySpeedClass_away&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;buildUpPlayDribblingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;buildUpPlayPassingClass_away&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;buildUpPlayPositioningClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationPassingClass_away&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;chanceCreationCrossingClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;chanceCreationShootingClass_away&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;chanceCreationPositioningClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;defencePressureClass_away&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;defenceAggressionClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;defenceTeamWidthClass_away&#39;</span><span class="p">,</span> 
+                   <span class="s1">&#39;defenceDefenderLineClass_away&#39;</span><span class="p">,</span> <span class="s1">&#39;team_long_name_away&#39;</span><span class="p">]</span>
     <span class="n">year</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span><span class="o">.</span><span class="n">year</span>
 
-    <span class="c1"># Load model pickle file </span>
-    <span class="n">model</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">&#39;./develop/model.pkl&#39;</span><span class="p">)</span>         
-    
-    <span class="c1"># Create dummy variables </span>
-    <span class="n">stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">columns</span> <span class="o">=</span> <span class="n">categorical</span><span class="p">)</span>
+    <span class="c1"># Create dummy variables.</span>
+    <span class="n">stats</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">get_dummies</span><span class="p">(</span><span class="n">stats</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">categorical</span><span class="p">)</span>
 
-    <span class="c1"># Create of row of data that comabines team attributes and playing styles for home and away teams</span>
-    <span class="n">test</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;team_long_name_home_&#39;</span> <span class="o">+</span> <span class="n">home</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;team_long_name_away_&#39;</span> <span class="o">+</span> <span class="n">away</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">)]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)]</span>
+    <span class="c1"># Map team attributes and playing styles for home and away teams.</span>
+    <span class="n">test</span> <span class="o">=</span> <span class="n">stats</span><span class="p">[(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;team_long_name_home_&#39;</span> <span class="o">+</span> <span class="n">home</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span>
+                 <span class="o">&amp;</span> <span class="p">(</span><span class="n">stats</span><span class="p">[</span><span class="s1">&#39;team_long_name_away_&#39;</span> <span class="o">+</span> <span class="n">away</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39; &#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)]</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)]</span>
     <span class="n">test</span><span class="p">[</span><span class="s1">&#39;season_year&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">year</span>
 
-    <span class="c1"># Make prediction from the loaded logistic regression model</span>
+    <span class="c1"># Make prediction from the loaded logistic regression model.</span>
     <span class="n">predict</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">test</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
 
-    <span class="k">return</span>  <span class="n">predict</span></div>
+    <span class="k">return</span> <span class="n">predict</span></div>
 </pre></div>
 
           </div>
