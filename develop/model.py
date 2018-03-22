@@ -72,7 +72,7 @@ def model(df):
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
     logger = logging.getLogger(__name__)
-    hdlr = logging.FileHandler('./log.log')
+    hdlr = logging.FileHandler('./logs.log')
     logger.addHandler(hdlr) 
 
     logger.info('Creating data table for model fitting...')
