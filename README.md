@@ -5,7 +5,7 @@ This is the libarary for my [application](http://match-prediction.us-west-2.elas
 
 ## Motivation
 
-I wanted to create an application that helps answer one of the most fundamental questions for sports fans: who will win? As an avid football fan, I have built an app for fans to interact with and obtain match predictions for the English Premier League. The app allows users to select teams for the home and away sides and produces win probabilities based on the user inputs.
+I wanted to create an application that helps answer one of the most fundamental questions for sports fans: who will win? As an avid football fan, I wanted to build an app for fans to interact with and obtain match predictions for the English Premier League. This app allows users to select teams for the home and away sides and produces win probabilities based on the user inputs.
 
 
 ## Directory Organization
@@ -32,7 +32,7 @@ You can navigate this library using the following mapping:
 
 I used the [European Soccer Database](https://www.kaggle.com/hugomathien/soccer/data) from Kaggle for this application. The dataset consists of historical match results for a number of European leagues, teams and their attributes (e.g. offensive style and overall team rating), and other player information. I filtered the data to include just the EPL matches across 32 teams before fitting the model. 
 
-I fit a multinomial logistic regression model on the dataset to predict which side would win the match. The predictors mainly consist of team attributes for both the home and away sides. To reproduce the model, please follow these steps:
+I fit a multinomial logistic regression model on the ingested data to predict which side would win the match. The predictors mainly consist of team attributes for both the home and away sides. To reproduce the model, please follow these steps:
 
 1. Clone this repository.
 
@@ -67,14 +67,14 @@ I fit a multinomial logistic regression model on the dataset to predict which si
 
 Unit tests can be conducted by running the following commands:
 
-    `cd ./develop/`
-    
-    `pytest test.py`
+    cd ./develop/
+    pytest test.py
 
 
 ## Documentation
 
 The documentation for the functions found in this library can be accessed by opening this [file](https://github.com/spencermoon/soccer/blob/master/docs/_build/html/index.html) in your browser after cloning the repository. 
+
 
 ## Pivotal Tracker
 
