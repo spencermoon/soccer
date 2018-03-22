@@ -60,7 +60,7 @@ I fit a multinomial logistic regression model on the ingested data to predict wh
     
     `python model.py`
 
-8. Running the command above saves the model as a pickle file, which can be loaded to make predictions. Logs from data ingestion and model creation can be found in `log.log`.
+8. Running the command above saves the model as a pickle file, which can be loaded to make predictions. Logs from data ingestion and model creation can be found in `logs.log`.
 
 
 ## Unit Testing
