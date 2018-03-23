@@ -13,6 +13,7 @@ Welcome to EPL Match Prediction's documentation!
    data
    model
    predict
+   test
 
 Indices and tables
 ==================

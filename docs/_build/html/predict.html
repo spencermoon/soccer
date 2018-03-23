@@ -27,6 +27,7 @@
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Testing" href="test.html" />
     <link rel="prev" title="Model Fitting" href="model.html" />
    
   <link rel="stylesheet" href="_static/custom.css" type="text/css" />
@@ -48,15 +49,18 @@
 <p>The function below makes a prediction by loading the logistic regression model and feeding user team inputs combined with team attributes and playing styles.</p>
 <span class="target" id="module-prediction"></span><dl class="function">
 <dt id="prediction.prediction">
-<code class="descclassname">prediction.</code><code class="descname">prediction</code><span class="sig-paren">(</span><em>home</em>, <em>away</em>, <em>stats</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prediction.html#prediction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prediction.prediction" title="Permalink to this definition">¶</a></dt>
-<dd><p>This function returns win probabilities based on user inputs for home and away teams combined with team attributes and playing styles.</p>
+<code class="descclassname">prediction.</code><code class="descname">prediction</code><span class="sig-paren">(</span><em>home</em>, <em>away</em>, <em>stats</em>, <em>model</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/prediction.html#prediction"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#prediction.prediction" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make predictions using a static model.</p>
+<p>This function returns win probabilities based on user inputs for home and 
+away teams combined with team attributes and playing styles.</p>
 <dl class="docutils">
 <dt>Args:</dt>
-<dd>home (str): Home team name
-away (str): Away team name
-stats (df): DataFrame that contains team attributes and playing styles</dd>
+<dd>home (str): Home team name.
+away (str): Away team name.
+stats (df): DataFrame that contains team attributes and playing styles.
+model (pkl): Static model.</dd>
 <dt>Returns:</dt>
-<dd>list: List of win probabilities for away, draw, and home</dd>
+<dd>list: List of win probabilities for away, draw, and home.</dd>
 </dl>
 </dd></dl>
 
@@ -72,6 +76,7 @@ stats (df): DataFrame that contains team attributes and playing styles</dd>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
       <li>Previous: <a href="model.html" title="previous chapter">Model Fitting</a></li>
+      <li>Next: <a href="test.html" title="next chapter">Testing</a></li>
   </ul></li>
 </ul>
 </div>
