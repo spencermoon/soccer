@@ -83,5 +83,7 @@ The development process for this application can be found here: [Pivotal Tracker
 ## Team
 
 Developer: Spencer Moon
+
 QA: Johnny Chiu
+
 Project Manager: Yuqing Liu
