@@ -74,16 +74,3 @@ Unit tests can be conducted by running the following commands:
 ## Documentation
 
 The documentation for the functions found in this library can be accessed by opening this [file](https://github.com/spencermoon/soccer/blob/master/docs/_build/html/index.html) in your browser after cloning the repository. 
-
-
-## Pivotal Tracker
-
-The development process for this application can be found here: [Pivotal Tracker](https://www.pivotaltracker.com/n/projects/2141794).
-
-## Team
-
-Developer: Spencer Moon
-
-QA: Johnny Chiu
-
-Project Manager: Yuqing Liu
